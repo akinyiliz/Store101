@@ -1,16 +1,26 @@
+import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
+dotenv.config();
 
 import User from "../models/user";
 
 export const register = async (req: Request, res: Response) => {
-  const userDetails = req.body;
+  const { username, email, password } = req.body;
 
   try {
+    if (!username || !email || !password) {
+      res
+        .status(400)
+        .json({ status: false, message: "All fields are required" });
+    }
+
     const usernameExists = await User.findOne({
-      username: userDetails.username,
+      username: username,
     });
-    const emailExists = await User.findOne({ email: userDetails.email });
+
+    const emailExists = await User.findOne({ email: email });
 
     if (usernameExists) {
       return res.status(409).json({
@@ -27,22 +37,83 @@ export const register = async (req: Request, res: Response) => {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(userDetails.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    userDetails.password = hashedPassword;
+    const user = await User.create({
+      username: username,
+      email: email,
+      password: hashedPassword,
+    });
 
-    const user = await User.create(userDetails);
     return res.status(201).json({
       success: true,
       message: "User created successfully.",
       data: user,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
 
     return res.status(500).json({
       success: false,
-      error: "Internal server error. Try again later.",
+      message: error.message,
     });
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+
+  try {
+    if (!username || !password) {
+      res.status(400).json({
+        status: false,
+        message: "Username and ppassword are required",
+      });
+    }
+
+    const userExists = await User.findOne({ username: username });
+
+    if (!userExists) {
+      res.status(401).json({
+        success: false,
+        message: "No user with the provided username or email found.",
+      });
+    } else {
+      const passwordMatch = await bcrypt.compare(password, userExists.password);
+
+      if (passwordMatch) {
+        const secretKey = process.env.JWT_SECRET_KEY;
+
+        if (!secretKey) {
+          throw new Error("JWT secret key is not defined.");
+        }
+
+        const token = jwt.sign({ id: userExists._id }, secretKey, {
+          expiresIn: "1d",
+        });
+
+        res.status(200).json({
+          success: true,
+          message: "User created successfully",
+          token: token,
+        });
+      } else {
+        res.status(401).json({ success: false, message: "Invalid password" });
+      }
+    }
+  } catch (error: any) {
+    console.error("Error logging in user:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const users = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find();
+
+    res.status(200).json({ success: true, data: users });
+  } catch (error: any) {
+    console.error("Error getting in user:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
