@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 dotenv.config();
 
 import User from "../models/user";
+import { AuthenticatedRequest } from "../middlewares/verifyToken";
 
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
@@ -39,7 +40,7 @@ export const register = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({
+    await User.create({
       username: username,
       email: email,
       password: hashedPassword,
@@ -48,7 +49,6 @@ export const register = async (req: Request, res: Response) => {
     return res.status(201).json({
       success: true,
       message: "User created successfully.",
-      data: user,
     });
   } catch (error: any) {
     console.error(error);
@@ -67,7 +67,7 @@ export const login = async (req: Request, res: Response) => {
     if (!username || !password) {
       res.status(400).json({
         status: false,
-        message: "Username and ppassword are required",
+        message: "Username and password are required",
       });
     }
 
@@ -94,7 +94,7 @@ export const login = async (req: Request, res: Response) => {
 
         res.status(200).json({
           success: true,
-          message: "User created successfully",
+          message: "User login successfully",
           token: token,
         });
       } else {
@@ -113,7 +113,19 @@ export const users = async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, data: users });
   } catch (error: any) {
-    console.error("Error getting in user:", error);
+    console.error("Error getting in users:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const userProfile = async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findOne({ _id: userId });
+    res.status(200).json({ success: true, data: user });
+  } catch (error: any) {
+    console.error("Error getting in user profile:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
