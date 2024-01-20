@@ -4,6 +4,7 @@ import cors, { CorsOptions } from "cors";
 
 import connectDB from "../config/db";
 import userRoutes from "../routes/user.routes";
+import productRoutes from "../routes/product.routes";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // routes
 app.use("/auth/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
