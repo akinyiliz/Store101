@@ -76,7 +76,7 @@ export const login = async (req: Request, res: Response) => {
     if (!userExists) {
       res.status(401).json({
         success: false,
-        message: "No user with the provided username or email found.",
+        message: "No user with the provided username found.",
       });
     } else {
       const passwordMatch = await bcrypt.compare(password, userExists.password);
