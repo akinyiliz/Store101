@@ -1,34 +1,26 @@
 import { FC } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { MdOutlineShoppingCart, MdSearch } from "react-icons/md";
+import { MdOutlineShoppingCart } from "react-icons/md";
 
 import { User } from "../types/user";
 import { Link } from "react-router-dom";
+import Searchbar from "./Searchbar";
 
 interface NavbarProps {
   user: User | null;
-  handleLogout: () => void;
+  handleLogout?: () => void;
 }
 
-const Navbar: FC<NavbarProps> = ({ user, handleLogout }) => {
+const Navbar: FC<NavbarProps> = ({ user }) => {
   return (
-    <section className="bg-white w-full h-28 md:h-16 border-b px-2 py-3">
-      <nav className="xl:max-w-7xl xl:mx-auto flex flex-col gap-2">
+    <section className="xl:max-w-7xl xl:mx-auto w-full h-40 lg:h-28 mb-4 bg-white">
+      <nav className="flex flex-col gap-2 px-2 py-3 md:border-b md:border-[#808080]">
         <div className="flex items-center justify-between md:gap-8">
           {/* LOGO */}
-          <h1 className="font-bold text-3xl">
-            Store<span className="text-blue-500">101</span>
+          <h1 className="text-3xl">
+            <span className="font-bold">store</span>
+            <span className="font-normal text-[#FFAE5D]">101</span>
           </h1>
-
-          {/* TABLET AND LARGE SCREEN SEARCH BAR */}
-          <div className="hidden md:flex md:w-3/4 lg:w-1/2 items-center gap-2 border border-gray-500 p-1 rounded-xl">
-            <MdSearch size={22} className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search for products"
-              className="flex-1 focus:outline-none"
-            />
-          </div>
 
           {/* CART & LOGIN BUTTON */}
           <ul className="flex items-center gap-2 md:gap-4">
@@ -36,40 +28,27 @@ const Navbar: FC<NavbarProps> = ({ user, handleLogout }) => {
               <MdOutlineShoppingCart size={25} />
             </li>
 
-            {user && (
+            {!user && (
               <li>
-                <FaUserCircle size={25} />
+                <Link to={"/login"}>
+                  <button className="font-medium p-2 rounded-lg hover:bg-[#FFAE5D]">
+                    Sign In
+                  </button>
+                </Link>
               </li>
             )}
 
-            <li>
-              {user && (
-                <button className="px-4 bg-gray-500" onClick={handleLogout}>
-                  Logout
-                </button>
-              )}
-
-              {!user && (
-                <Link to={"/register"}>
-                  <button className="px-2 md:px-4 py-1 bg-blue-500 text-white rounded-lg">
-                    Register
-                  </button>
-                </Link>
-              )}
-            </li>
+            {user && (
+              <li className="flex items-center gap-2">
+                <FaUserCircle size={25} />
+                <p className="capitalize">{user.username}</p>
+              </li>
+            )}
           </ul>
         </div>
-
-        {/* MOBILE SCREEN SEARCH BAR */}
-        <div className="border border-gray-500 p-2 flex items-center gap-2 rounded-xl md:hidden">
-          <MdSearch size={22} className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search for products"
-            className="flex-1 focus:outline-none"
-          />
-        </div>
       </nav>
+
+      <Searchbar />
     </section>
   );
 };
