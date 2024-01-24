@@ -3,10 +3,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { User } from "./types/user";
 
+import Navbar from "./components/Navbar";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Navbar from "./components/Navbar";
+import ProductPage from "./pages/Product";
+import Categories from "./pages/Categories";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -39,13 +42,15 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <main className="w-full h-screen bg-gray-100 text-black text-base">
+      <main className="w-full h-screen bg-white text-black text-base">
         <Navbar user={user} handleLogout={handleLogout} />
 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/categories/:category" element={<Categories />} />
+          <Route path="/products/:productId" element={<ProductPage />} />
         </Routes>
       </main>
     </BrowserRouter>
