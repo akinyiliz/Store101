@@ -16,7 +16,7 @@ const ProductCard: FC<Product> = ({ id, title, price, image }) => {
         </div>
 
         <div className="p-4">
-          <h2 className="text-base font-medium text-gray-900">
+          <h2 className="text-base font-medium text-[#3d3d3d]">
             {title.split(" ").slice(0, 4).join(" ")}
           </h2>
           <p className="mt-1 text-sm text-gray-600">{price}</p>
