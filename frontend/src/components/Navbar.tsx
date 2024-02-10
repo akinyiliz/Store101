@@ -27,7 +27,9 @@ const Navbar: FC<NavbarProps> = ({ user }) => {
           {/* CART & LOGIN BUTTON */}
           <ul className="flex items-center gap-2 md:gap-4">
             <li>
-              <MdOutlineShoppingCart size={25} />
+              <Link to={"/cart"}>
+                <MdOutlineShoppingCart size={25} />
+              </Link>
             </li>
 
             {!user && (
