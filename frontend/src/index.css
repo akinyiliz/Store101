@@ -7,3 +7,13 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+.cart-container-format{
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  color: #454545;
+  text-align: center;
+}
