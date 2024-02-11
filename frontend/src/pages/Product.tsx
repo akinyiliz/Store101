@@ -4,13 +4,15 @@ import { Suspense, useEffect, useState } from "react";
 
 import { Product } from "../types/product";
 import LoadingUI from "../components/LoadingUI";
+import { products } from "../data/products";
+import { useCart } from "../context/CartContext";
 
 const ProductPage = () => {
   const query = useParams();
-  const productId = query.productId;
+  const productId = Number(query.productId);
 
   const [product, setProduct] = useState<Product>({
-    id: Number(productId),
+    id: productId,
     title: "",
     description: "",
     category: "",
@@ -19,24 +21,21 @@ const ProductPage = () => {
     image: "",
   });
 
-  async function fetchProductDetails() {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/products/product/${productId}`
-      );
+  const { addToCart } = useCart();
 
-      const data = await response.json();
-
-      // console.log(data);
-      setProduct(data.product);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+  // Getting product clicked using its id
   useEffect(() => {
-    fetchProductDetails();
-  });
+    const actualProduct = products.find((product) => product.id === productId);
+
+    if (actualProduct) {
+      setProduct(actualProduct);
+    }
+  }, [productId]);
+
+  // Handling AddToCart functionality using addToCart function from CartContext
+  const handleAddToCart = () => {
+    addToCart(product.id);
+  };
 
   return (
     <Suspense fallback={<LoadingUI />}>
@@ -53,7 +52,9 @@ const ProductPage = () => {
 
           {/* PRODUCT TITLE, DESCRIPTION & PRICE */}
           <div className="relative w-full md:w-1/2 flex flex-col gap-2 md:gap-4">
-            <h2 className="font-semibold text-2xl">{product.title}</h2>
+            <h2 className="text-[#3d3d3d] font-semibold text-2xl">
+              {product.title}
+            </h2>
 
             <div className="space-y-2">
               <p className="text-sm lg:text-lg">{product.description}</p>
@@ -70,7 +71,10 @@ const ProductPage = () => {
 
             <p className="text-[#808080] text-xl">${product.price}</p>
 
-            <button className=" py-2 bg-[#FFAE5D] text-lg font-medium">
+            <button
+              onClick={handleAddToCart}
+              className="uppercase py-2 bg-[#FFAE5D] text-lg font-medium"
+            >
               Add to cart
             </button>
           </div>
