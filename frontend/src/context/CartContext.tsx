@@ -9,6 +9,8 @@ interface CartContextType {
   cart: { [productId: number]: number };
   addToCart: (productId: number) => void;
   removeFromCart: (productId: number) => void;
+  getTotalCartAmount: () => number;
+  getTotalCartItems: () => number;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -49,7 +51,37 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
     }));
   };
 
-  const contextValue = { products, cart, addToCart, removeFromCart };
+  const getTotalCartAmount = () => {
+    let totalAmount = 0;
+
+    Object.entries(cart).forEach(([productId, quantity]) => {
+      const product = products.find((p) => p.id === parseInt(productId));
+      if (product) {
+        totalAmount += product.price * quantity;
+      }
+    });
+
+    return totalAmount;
+  };
+
+  const getTotalCartItems = () => {
+    let totalItems = 0;
+
+    Object.values(cart).forEach((quantity) => {
+      totalItems += quantity;
+    });
+
+    return totalItems;
+  };
+
+  const contextValue = {
+    products,
+    cart,
+    addToCart,
+    removeFromCart,
+    getTotalCartAmount,
+    getTotalCartItems,
+  };
 
   return (
     <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
