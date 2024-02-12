@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 const Register = () => {
@@ -41,45 +41,62 @@ const Register = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-[300px] gap-4 m-4">
-      <h2 className="font-bold text-xl">Register</h2>
+    <div className="w-full h-full xl:max-w-7xl xl:mx-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col w-[300px] gap-4 py-6 px-2 pt-40 lg:pt-36"
+      >
+        <h2 className="font-bold text-xl">Register</h2>
 
-      <input
-        type="text"
-        placeholder="Username"
-        required
-        autoComplete="off"
-        name="username"
-        value={details.username}
-        onChange={handleChange}
-        className="border px-2"
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        required
-        autoComplete="off"
-        name="email"
-        value={details.email}
-        onChange={handleChange}
-        className="border px-2"
-      />
+        <input
+          type="text"
+          placeholder="Username"
+          required
+          autoComplete="off"
+          name="username"
+          value={details.username}
+          onChange={handleChange}
+          className="border px-2"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          required
+          autoComplete="off"
+          name="email"
+          value={details.email}
+          onChange={handleChange}
+          className="border px-2"
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        required
-        autoComplete="off"
-        name="password"
-        value={details.password}
-        onChange={handleChange}
-        className="border px-2"
-      />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          autoComplete="off"
+          name="password"
+          value={details.password}
+          onChange={handleChange}
+          className="border px-2"
+        />
 
-      <button type="submit" className="bg-gray-500">
-        Register
-      </button>
-    </form>
+        <div className="flex flex-col items-center">
+          <button type="submit" className="w-full bg-primaryColor text-white">
+            Register
+          </button>
+
+          <small>
+            Already have an account?{" "}
+            <Link
+              to={"/login"}
+              className="underline hover:text-primaryColor font-semibold"
+            >
+              Login
+            </Link>
+          </small>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 const Login = () => {
@@ -38,34 +38,51 @@ const Login = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-[300px] gap-4 m-4">
-      <h2 className="font-bold text-xl">Login</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        required
-        autoComplete="off"
-        name="username"
-        value={credentials.username}
-        onChange={handleChange}
-        className="border px-2"
-      />
+    <div className="w-full h-full xl:max-w-7xl xl:mx-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col w-[300px] gap-4 py-6 px-2 pt-40 lg:pt-36"
+      >
+        <h2 className="font-bold text-xl">Login</h2>
+        <input
+          type="text"
+          placeholder="Username"
+          required
+          autoComplete="off"
+          name="username"
+          value={credentials.username}
+          onChange={handleChange}
+          className="border px-2"
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        required
-        autoComplete="off"
-        name="password"
-        value={credentials.password}
-        onChange={handleChange}
-        className="border px-2"
-      />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          autoComplete="off"
+          name="password"
+          value={credentials.password}
+          onChange={handleChange}
+          className="border px-2"
+        />
 
-      <button type="submit" className="bg-gray-500">
-        Login
-      </button>
-    </form>
+        <div className="flex flex-col items-center">
+          <button type="submit" className="w-full bg-primaryColor text-white">
+            Login
+          </button>
+
+          <small>
+            Don&apos;t have an account?{" "}
+            <Link
+              to={"/register"}
+              className="underline hover:text-primaryColor font-semibold"
+            >
+              Register
+            </Link>
+          </small>
+        </div>
+      </form>
+    </div>
   );
 };
 
