@@ -8,12 +8,23 @@
   font-weight: 400;
 }
 
-.cart-container-format{
+.cart-container-format, .cart-item{
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.5fr 3fr 0.5fr 0.5fr 0.5fr 0.5fr;
   align-items: center;
   gap: 20px;
-  padding: 15px;
+  padding: 15px 0;
   color: #454545;
   text-align: center;
+}
+
+@media(max-width: 500px){
+  .cart-container-format{
+    display:none;
+  }
+
+  .cart-item{
+    grid-template-columns: 0.5fr 3fr 0.5fr;
+    gap:10px;
+  }
 }
