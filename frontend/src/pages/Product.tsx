@@ -39,7 +39,7 @@ const ProductPage = () => {
 
   return (
     <Suspense fallback={<LoadingUI />}>
-      <section className="py-4 px-2 w-full xl:max-w-7xl xl:mx-auto">
+      <section className="pt-40 lg:pt-36 py-4 px-2 w-full xl:max-w-7xl xl:mx-auto">
         <div className="px-2 md:w-3/4 md:mx-auto flex flex-col md:flex-row items-center">
           {/* IMAGE & ADD TO CART BUTTON */}
           <div className="w-full md:w-1/2 h-full">
@@ -52,28 +52,26 @@ const ProductPage = () => {
 
           {/* PRODUCT TITLE, DESCRIPTION & PRICE */}
           <div className="relative w-full md:w-1/2 flex flex-col gap-2 md:gap-4">
-            <h2 className="text-[#3d3d3d] font-semibold text-2xl">
-              {product.title}
-            </h2>
+            <h2 className="font-semibold text-2xl">{product.title}</h2>
 
             <div className="space-y-2">
               <p className="text-sm lg:text-lg">{product.description}</p>
 
-              <div className="flex items-center gap-4 lg:gap-8 text-[#808080] text-sm">
+              <div className="flex items-center gap-4 lg:gap-8 font-light text-sm">
                 <p className="capitalize">{product.category}</p>
                 <p className="flex items-center gap-1">
-                  <FaStar className="text-[#FFAE5D]" />
+                  <FaStar className="text-primaryColor" />
                   <span>{product.rating?.rate}</span>
                 </p>
                 <p>{product.rating?.count} Ratings</p>
               </div>
             </div>
 
-            <p className="text-[#808080] text-xl">${product.price}</p>
+            <p className="font-light text-xl">${product.price}</p>
 
             <button
               onClick={handleAddToCart}
-              className="uppercase py-2 bg-[#FFAE5D] text-lg font-medium"
+              className="uppercase py-2 bg-primaryColor text-white text-lg font-medium"
             >
               Add to cart
             </button>
