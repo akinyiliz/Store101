@@ -7,7 +7,7 @@ const ProductCard: FC<Product> = ({ id, title, price, image }) => {
   return (
     <Link to={"/products/" + id}>
       <div className="bg-white rounded-lg shadow-md w-full">
-        <div className="relative w-full h-44 md:h-64 flex items-center justify-center overflow-hidden rounded-lg">
+        <div className="relative w-full h-36 md:h-48 lg:h-64 flex items-center justify-center overflow-hidden rounded-lg">
           <img
             src={image}
             alt={title}
@@ -16,10 +16,10 @@ const ProductCard: FC<Product> = ({ id, title, price, image }) => {
         </div>
 
         <div className="p-4">
-          <h2 className="text-base font-medium text-[#3d3d3d]">
+          <h2 className="text-base font-medium">
             {title.split(" ").slice(0, 4).join(" ")}
           </h2>
-          <p className="mt-1 text-sm text-gray-600">{price}</p>
+          <p className="mt-1 text-sm font-light">${price}</p>
         </div>
       </div>
     </Link>

@@ -21,7 +21,7 @@ const Searchbar = () => {
   }, [location.pathname]);
 
   return (
-    <div className="w-full p-2 flex flex-col-reverse lg:flex-row items-center gap-4 lg:gap-16 md:justify-between">
+    <div className="md:px-6 w-full p-2 flex flex-col-reverse lg:flex-row items-center gap-2 md:gap-4 lg:gap-16 md:justify-between">
       {/* CATEGORIES LIST */}
       <ul className="w-full md:w-3/4 lg:w-1/2 flex items-center justify-between flex-wrap font-medium">
         {categories.map((category, index) => {
@@ -31,7 +31,7 @@ const Searchbar = () => {
             <li
               key={index}
               className={`font-medium capitalize text-xs md:text-base ${
-                isActive ? "border-b-4 border-[#FFAE5D]" : ""
+                isActive ? "border-b-4 border-primaryColor" : ""
               }`}
             >
               <Link
