@@ -3,8 +3,7 @@ import express from "express";
 import cors, { CorsOptions } from "cors";
 
 import connectDB from "../config/db";
-import userRoutes from "../routes/user.routes";
-import productRoutes from "../routes/product.routes";
+import appRoutes from "../routes/index";
 
 dotenv.config();
 
@@ -31,8 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // routes
-app.use("/auth/users", userRoutes);
-app.use("/api/products", productRoutes);
+app.use("/api/v1", appRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
