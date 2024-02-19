@@ -39,49 +39,53 @@ const Login = () => {
 
   return (
     <div className="w-full h-full xl:max-w-7xl xl:mx-auto">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[300px] gap-4 py-6 px-2 pt-40 lg:pt-36"
-      >
-        <h2 className="font-bold text-xl">Login</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          required
-          autoComplete="off"
-          name="username"
-          value={credentials.username}
-          onChange={handleChange}
-          className="border px-2"
-        />
+      <div className="px-4 pt-40 lg:pt-36 flex items-center justify-center">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[500px]">
+          <h2 className="font-bold text-3xl text-primaryColor text-center">
+            Sign In
+          </h2>
+          <input
+            type="text"
+            placeholder="Username"
+            required
+            autoComplete="off"
+            name="username"
+            value={credentials.username}
+            onChange={handleChange}
+            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          autoComplete="off"
-          name="password"
-          value={credentials.password}
-          onChange={handleChange}
-          className="border px-2"
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            autoComplete="off"
+            name="password"
+            value={credentials.password}
+            onChange={handleChange}
+            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
+          />
 
-        <div className="flex flex-col items-center">
-          <button type="submit" className="w-full bg-primaryColor text-white">
-            Login
-          </button>
-
-          <small>
-            Don&apos;t have an account?{" "}
-            <Link
-              to={"/register"}
-              className="underline hover:text-primaryColor font-semibold"
+          <div className="flex flex-col items-center">
+            <button
+              type="submit"
+              className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md"
             >
-              Register
-            </Link>
-          </small>
-        </div>
-      </form>
+              Sign In
+            </button>
+
+            <small>
+              Don&apos;t have an account?{" "}
+              <Link
+                to={"/register"}
+                className="underline hover:text-primaryColor font-semibold"
+              >
+                sign up
+              </Link>
+            </small>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
