@@ -42,60 +42,67 @@ const Register = () => {
 
   return (
     <div className="w-full h-full xl:max-w-7xl xl:mx-auto">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[300px] gap-4 py-6 px-2 pt-40 lg:pt-36"
-      >
-        <h2 className="font-bold text-xl">Register</h2>
+      <div className="px-4 pt-40 lg:pt-36 flex items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 w-full md:w-[500px]"
+        >
+          <h2 className="font-bold text-3xl text-primaryColor text-center">
+            Sign Up
+          </h2>
+          <input
+            type="text"
+            placeholder="Username"
+            required
+            autoComplete="off"
+            name="username"
+            value={details.username}
+            onChange={handleChange}
+            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
+          />
 
-        <input
-          type="text"
-          placeholder="Username"
-          required
-          autoComplete="off"
-          name="username"
-          value={details.username}
-          onChange={handleChange}
-          className="border px-2"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          autoComplete="off"
-          name="email"
-          value={details.email}
-          onChange={handleChange}
-          className="border px-2"
-        />
+          <input
+            type="text"
+            placeholder="Email"
+            required
+            autoComplete="off"
+            name="email"
+            value={details.email}
+            onChange={handleChange}
+            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          autoComplete="off"
-          name="password"
-          value={details.password}
-          onChange={handleChange}
-          className="border px-2"
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            autoComplete="off"
+            name="password"
+            value={details.password}
+            onChange={handleChange}
+            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
+          />
 
-        <div className="flex flex-col items-center">
-          <button type="submit" className="w-full bg-primaryColor text-white">
-            Register
-          </button>
-
-          <small>
-            Already have an account?{" "}
-            <Link
-              to={"/login"}
-              className="underline hover:text-primaryColor font-semibold"
+          <div className="flex flex-col items-center">
+            <button
+              type="submit"
+              className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md"
             >
-              Login
-            </Link>
-          </small>
-        </div>
-      </form>
+              Sign Up
+            </button>
+
+            <small>
+              Don&apos;t have an account?{" "}
+              <Link
+                to={"/login"}
+                className="underline hover:text-primaryColor font-semibold"
+              >
+                sign in
+              </Link>
+            </small>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
