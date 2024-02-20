@@ -16,7 +16,8 @@ const ProductPage = () => {
     title: "",
     description: "",
     category: "",
-    rating: { rate: 0, count: 0 },
+    rate: 0,
+    reviews: 0,
     price: 0,
     image: "",
   });
@@ -59,11 +60,11 @@ const ProductPage = () => {
 
               <div className="flex items-center gap-4 lg:gap-8 font-light text-sm">
                 <p className="capitalize">{product.category}</p>
-                <p className="flex items-center gap-1">
+                <p className="flex items-center justify-center gap-1">
                   <FaStar className="text-primaryColor" />
-                  <span>{product.rating?.rate}</span>
+                  <span>{product.rate}</span>
                 </p>
-                <p>{product.rating?.count} Ratings</p>
+                <p>{product.reviews} Reviews</p>
               </div>
             </div>
 
