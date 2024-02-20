@@ -1,13 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
+  const { login } = useAuth();
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setCredentials((prev) => {
@@ -18,23 +21,7 @@ const Login = () => {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      const data = await response.json();
-      // console.log(data);
-
-      localStorage.setItem("access", data.token);
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-    }
+    await login(credentials.email, credentials.password);
   }
 
   return (
@@ -46,25 +33,38 @@ const Login = () => {
           </h2>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Email"
             required
             autoComplete="off"
-            name="username"
-            value={credentials.username}
+            name="email"
+            value={credentials.email}
             onChange={handleChange}
             className="border border-gray p-2 focus:outline-primaryColor rounded-md"
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            autoComplete="off"
-            name="password"
-            value={credentials.password}
-            onChange={handleChange}
-            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
-          />
+          <div className="flex items-center gap-1 pr-2 border border-gray focus:outline-primaryColor rounded-md">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              required
+              autoComplete="off"
+              name="password"
+              value={credentials.password}
+              onChange={handleChange}
+              className="w-full p-2 focus:outline-primaryColor rounded-md"
+            />
+            {showPassword ? (
+              <FiEye
+                onClick={() => setShowPassword(!showPassword)}
+                className="hover:text-primaryColor cursor-pointer"
+              />
+            ) : (
+              <FiEyeOff
+                onClick={() => setShowPassword(!showPassword)}
+                className="hover:text-primaryColor cursor-pointer"
+              />
+            )}
+          </div>
 
           <div className="flex flex-col items-center">
             <button
