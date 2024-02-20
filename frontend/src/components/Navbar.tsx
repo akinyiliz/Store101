@@ -1,19 +1,20 @@
-import { FC } from "react";
 import { Link } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
+
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 import Searchbar from "./Searchbar";
-import { User } from "../types/user";
+
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
-interface NavbarProps {
-  user: User | null;
-  handleLogout?: () => void;
-}
-
-const Navbar: FC<NavbarProps> = ({ user }) => {
+const Navbar = () => {
   const { getTotalCartItems } = useCart();
+
+  const { isAuthenticated, logout } = useAuth();
+
+  function handleLogout() {
+    logout();
+  }
 
   return (
     <section className="xl:max-w-7xl xl:mx-auto w-full h-36 md:h-40 lg:h-32 mb-4 bg-white fixed z-10 top-0 left-0 right-0">
@@ -32,28 +33,30 @@ const Navbar: FC<NavbarProps> = ({ user }) => {
             <li className="relative">
               <Link to={"/cart"}>
                 <MdOutlineShoppingCart size={30} />
-                <div className="w-[20px] h-[20px] flex justify-center items-center absolute top-[-5px] left-4 text-sm rounded-full bg-primaryColor font-semibold border border-white">
-                  <small className="text-sm text-center text-white">
+                <div className="w-[20px] h-[20px] absolute top-[-5px] left-4 text-sm rounded-full bg-primaryColor font-semibold border border-white">
+                  <small className="flex justify-center items-center text-sm text-center text-white">
                     {getTotalCartItems()}
                   </small>
                 </div>
               </Link>
             </li>
 
-            {!user && (
+            {isAuthenticated ? (
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="font-medium p-2 rounded-lg hover:bg-primaryColor hover:text-white"
+                >
+                  Log out
+                </button>
+              </li>
+            ) : (
               <li>
                 <Link to={"/login"}>
                   <button className="font-medium p-2 rounded-lg hover:bg-primaryColor hover:text-white">
                     Sign In
                   </button>
                 </Link>
-              </li>
-            )}
-
-            {user && (
-              <li className="flex items-center gap-2">
-                <FaUserCircle size={25} />
-                <p className="capitalize">{user.username}</p>
               </li>
             )}
           </ul>
