@@ -15,7 +15,12 @@ const Searchbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname === "/cart") {
+    if (
+      location.pathname === "/" ||
+      location.pathname === "/cart" ||
+      location.pathname === "/register" ||
+      location.pathname === "/login"
+    ) {
       setActiveCategory(null);
     }
   }, [location.pathname]);
