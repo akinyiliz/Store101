@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
   const [details, setDetails] = useState({
@@ -7,6 +9,9 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { register } = useAuth();
 
   const navigate = useNavigate();
 
@@ -19,25 +24,8 @@ const Register = () => {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    try {
-      const response = await fetch(
-        "http://127.0.0.1:8000/auth/users/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(details),
-        }
-      );
-
-      await response.json();
-      // console.log(data);
-
-      navigate("/login");
-    } catch (error) {
-      console.error(error);
-    }
+    await register(details.username, details.email, details.password);
+    navigate("/");
   }
 
   return (
@@ -72,16 +60,29 @@ const Register = () => {
             className="border border-gray p-2 focus:outline-primaryColor rounded-md"
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            autoComplete="off"
-            name="password"
-            value={details.password}
-            onChange={handleChange}
-            className="border border-gray p-2 focus:outline-primaryColor rounded-md"
-          />
+          <div className="flex items-center gap-1 pr-2 border border-gray focus:outline-primaryColor rounded-md">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              required
+              autoComplete="off"
+              name="password"
+              value={details.password}
+              onChange={handleChange}
+              className="w-full p-2  focus:outline-primaryColor rounded-md"
+            />
+            {showPassword ? (
+              <FiEye
+                onClick={() => setShowPassword(!showPassword)}
+                className="hover:text-primaryColor cursor-pointer"
+              />
+            ) : (
+              <FiEyeOff
+                onClick={() => setShowPassword(!showPassword)}
+                className="hover:text-primaryColor cursor-pointer"
+              />
+            )}
+          </div>
 
           <div className="flex flex-col items-center">
             <button
