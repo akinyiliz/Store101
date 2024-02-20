@@ -7,6 +7,8 @@ dotenv.config();
 import User from "../models/user";
 import { AuthenticatedRequest } from "../middlewares/verifyToken";
 
+const secretKey = process.env.JWT_SECRET_KEY;
+
 export const register = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
@@ -26,64 +28,71 @@ export const register = async (req: Request, res: Response) => {
     if (usernameExists) {
       return res.status(409).json({
         success: false,
-        message: "User with that username already exists.",
+        error: "User with that username already exists.",
       });
     }
 
     if (emailExists) {
       return res.status(409).json({
         success: false,
-        message: "User with that email already exists.",
+        error: "User with that email already exists.",
       });
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    await User.create({
+    const newUser = await User.create({
       username: username,
       email: email,
       password: hashedPassword,
     });
 
+    if (!secretKey) {
+      throw new Error("JWT secret key is not defined.");
+    }
+
+    const token = jwt.sign({ id: newUser._id }, secretKey, {
+      expiresIn: "1d",
+    });
+
     return res.status(201).json({
       success: true,
       message: "User created successfully.",
+      token: token,
     });
   } catch (error: any) {
     console.error(error);
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      error: error.message,
     });
   }
 };
 
 export const login = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    if (!username || !password) {
+    if (!email || !password) {
       res.status(400).json({
         status: false,
-        message: "Username and password are required",
+        error: "Email and password are required",
       });
     }
 
-    const userExists = await User.findOne({ username: username });
+    const userExists = await User.findOne({ email: email });
 
     if (!userExists) {
       res.status(401).json({
         success: false,
-        message: "No user with the provided username found.",
+        error: "No user with the provided email found.",
       });
     } else {
       const passwordMatch = await bcrypt.compare(password, userExists.password);
 
       if (passwordMatch) {
-        const secretKey = process.env.JWT_SECRET_KEY;
-
         if (!secretKey) {
           throw new Error("JWT secret key is not defined.");
         }
@@ -94,16 +103,16 @@ export const login = async (req: Request, res: Response) => {
 
         res.status(200).json({
           success: true,
-          message: "User login successfully",
+          message: "User logged in successfully",
           token: token,
         });
       } else {
-        res.status(401).json({ success: false, message: "Invalid password" });
+        res.status(401).json({ success: false, error: "Invalid password" });
       }
     }
   } catch (error: any) {
     console.error("Error logging in user:", error);
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 
