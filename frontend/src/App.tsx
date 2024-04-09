@@ -4,8 +4,8 @@ import Navbar from "./components/Navbar";
 
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./components/LoginModal";
+import Register from "./components/RegisterModal";
 import Category from "./pages/Category";
 import ProductPage from "./pages/Product";
 import Footer from "./components/Footer";
@@ -17,8 +17,6 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
 
         <Route path="/cart" element={<Cart />} />
 
