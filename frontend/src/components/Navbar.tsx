@@ -6,11 +6,36 @@ import Searchbar from "./Searchbar";
 
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import Modal from "@mui/material/Modal";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
 const Navbar = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
   const { getTotalCartItems } = useCart();
 
   const { isAuthenticated, logout } = useAuth();
+
+  const handleOpenLoginModal = () => {
+    setIsLoginModalOpen(true);
+    setIsRegisterModalOpen(false);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleOpenRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+    setIsLoginModalOpen(false);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
 
   function handleLogout() {
     logout();
@@ -51,15 +76,39 @@ const Navbar = () => {
                 </button>
               </li>
             ) : (
-              <li>
-                <Link to={"/login"}>
-                  <button className="font-medium p-2 rounded-lg hover:bg-primaryColor hover:text-white">
-                    Sign In
-                  </button>
-                </Link>
-              </li>
+              <div className="flex">
+                <button
+                  onClick={handleOpenLoginModal}
+                  className="font-medium p-2 rounded-lg hover:text-primaryColor"
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={handleOpenRegisterModal}
+                  className="font-medium p-2 rounded-lg bg-primaryColor text-white"
+                >
+                  Sign Up
+                </button>
+              </div>
             )}
           </ul>
+
+          <Modal
+            open={isLoginModalOpen}
+            onClose={handleCloseLoginModal}
+            aria-labelledby="Login modal"
+          >
+            <LoginModal />
+          </Modal>
+
+          <Modal
+            open={isRegisterModalOpen}
+            onClose={handleCloseRegisterModal}
+            aria-labelledby="Login modal"
+          >
+            <RegisterModal />
+          </Modal>
         </div>
       </nav>
 
