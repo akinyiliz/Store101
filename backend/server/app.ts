@@ -4,6 +4,7 @@ import cors, { CorsOptions } from "cors";
 
 import connectDB from "../config/db";
 import appRoutes from "../routes/index";
+import path from "path";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const app = express();
 const allowedOrigins: string[] = [
   "http://localhost:3000",
   "http://localhost:3001",
+  "http://localhost:5173",
 ];
 
 const options: CorsOptions = {
@@ -28,6 +30,8 @@ connectDB();
 // body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use("/images", express.static(path.join(__dirname, "uploads", "images")));
 
 // routes
 app.use("/api/v1", appRoutes);
