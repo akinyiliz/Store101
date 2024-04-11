@@ -6,13 +6,9 @@ import { Product } from "../types/product";
 const ProductCard: FC<Product> = ({ id, title, price, image }) => {
   return (
     <Link to={"/products/" + id}>
-      <div className="bg-white rounded-lg shadow-md w-full">
+      <div className="bg-white rounded-lg w-full hover:shadow-lg hover:scale-105 transition-transform duration-500 ease-in-out">
         <div className="relative w-full h-36 md:h-48 lg:h-64 flex items-center justify-center overflow-hidden rounded-lg">
-          <img
-            src={image}
-            alt={title}
-            className="w-[70%] h-full hover:scale-110 transition-transform duration-500 ease-in-out"
-          />
+          <img src={image} alt={title} className="w-[70%] h-full" />
         </div>
 
         <div className="p-4">
