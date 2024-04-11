@@ -1,5 +1,7 @@
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
 
 import { Product } from "../types/product";
@@ -36,6 +38,15 @@ const ProductPage = () => {
   // Handling AddToCart functionality using addToCart function from CartContext
   const handleAddToCart = () => {
     addToCart(product.id);
+    toast.success("Product added successfully", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -47,7 +58,7 @@ const ProductPage = () => {
             <img
               src={product.image}
               alt={product.title}
-              className="w-[80%] h-[250px] md:h-[350px] lg:h-[500px] mx-auto md:mx-0 hover:scale-105 transition-transform duration-500 ease-in-out"
+              className="w-[80%] h-[300px] md:h-[350px] lg:h-[500px] mx-auto md:mx-0 hover:scale-105 transition-transform duration-500 ease-in-out"
             />
           </div>
 
@@ -79,6 +90,7 @@ const ProductPage = () => {
           </div>
         </div>
       </section>
+      <ToastContainer />
     </Suspense>
   );
 };
