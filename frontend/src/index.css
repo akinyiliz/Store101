@@ -7,6 +7,9 @@
   line-height: 1.5;
   font-weight: 400;
 }
+html, *{
+  font-family: sans-serif;
+}
 
 .cart-container-format, .cart-item{
   display: grid;
