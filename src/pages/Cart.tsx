@@ -79,7 +79,10 @@ const Cart: FC = () => {
                 </div>
               </div>
 
-              {/* <button disabled className="py-2 md:py-4 outline-none border-none bg-primaryColor text-white text-base font-semibold cursor-pointer">
+              {/* <button
+                disabled
+                className="py-2 md:py-4 outline-none border-none bg-primaryColor text-white text-base font-semibold cursor-pointer"
+              >
                 Proceed to Checkout
               </button> */}
             </div>
