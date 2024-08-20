@@ -1,15 +1,13 @@
-import { Routes, Route } from "react-router-dom";
-
-import Navbar from "./components/Navbar";
-
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
-
+import Login from "./pages/Login";
 import Category from "./pages/Category";
-import ProductPage from "./pages/Product";
 import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import ProductPage from "./pages/Product";
+import Register from "./pages/Register";
+import { Routes, Route } from "react-router-dom";
 import { useSearch } from "./context/SearchContext";
-
 import SearchResultsPage from "./pages/SearchResultsPage";
 
 function App() {
@@ -21,6 +19,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/register" element={<Register />} />
 
         <Route path="/cart" element={<Cart />} />
 
