@@ -1,77 +1,71 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState } from "react";
-
-import { products } from "../data/products";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { Product } from "../types/product";
 
 interface CartContextType {
   products: Product[];
-  cart: { [productId: number]: number };
-  addToCart: (productId: number) => void;
-  removeFromCart: (productId: number) => void;
+  cart: { [productId: string]: number };
+  addToCart: (productId: string, quantity?: number) => void;
+  removeFromCart: (productId: string) => void;
   getTotalCartAmount: () => number;
   getTotalCartItems: () => number;
+  clearCart: () => void;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<{ [productId: number]: number }>({});
+  const [products, setProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<{ [productId: string]: number }>(() => {
+    const storedCart = localStorage.getItem("cart");
+    return storedCart ? JSON.parse(storedCart) : {};
+  });
 
-  const getDefaultCart = () => {
-    const defaultCart: { [productId: number]: number } = {};
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await axios.get(`${BASE_URL}/product/all`);
+      const data: Product[] = response.data.data;
+      setProducts(data);
+    };
 
-    products.forEach((product: Product) => {
-      defaultCart[product.id] = 0;
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  const addToCart = (productId: string, quantity: number = 1) => {
+    setCart((prevCart) => ({
+      ...prevCart,
+      [productId]: (prevCart[productId] || 0) + quantity,
+    }));
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart((prevCart) => {
+      const updatedCart = { ...prevCart };
+      delete updatedCart[productId];
+      return updatedCart;
     });
-
-    return defaultCart;
-  };
-
-  // lazy initialization approach to initialize the cart state only when necessary
-  const lazyInitCart = () => {
-    if (Object.keys(cart).length === 0) {
-      setCart(getDefaultCart());
-    }
-  };
-
-  const addToCart = (productId: number) => {
-    lazyInitCart();
-    setCart((prevCart) => ({
-      ...prevCart,
-      [productId]: (prevCart[productId] || 0) + 1,
-    }));
-  };
-
-  const removeFromCart = (productId: number) => {
-    lazyInitCart();
-    setCart((prevCart) => ({
-      ...prevCart,
-      [productId]: prevCart[productId] - 1,
-    }));
   };
 
   const getTotalCartAmount = () => {
-    let totalAmount = 0;
-
-    Object.entries(cart).forEach(([productId, quantity]) => {
-      const product = products.find((p) => p.id === parseInt(productId));
-      if (product) {
-        totalAmount += product.price * quantity;
-      }
-    });
-
-    return totalAmount;
+    return Object.entries(cart).reduce((total, [productId, quantity]) => {
+      const product = products.find((p) => p._id === productId);
+      return product ? total + product.price * quantity : total;
+    }, 0);
   };
 
   const getTotalCartItems = () => {
-    let totalItems = 0;
+    return Object.values(cart).reduce((total, quantity) => total + quantity, 0);
+  };
 
-    Object.values(cart).forEach((quantity) => {
-      totalItems += quantity;
-    });
-
-    return totalItems;
+  const clearCart = () => {
+    setCart({});
   };
 
   const contextValue = {
@@ -81,12 +75,14 @@ const CartContextProvider = ({ children }: { children: React.ReactNode }) => {
     removeFromCart,
     getTotalCartAmount,
     getTotalCartItems,
+    clearCart,
   };
 
   return (
     <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
   );
 };
+
 export const useCart = () => {
   const context = useContext(CartContext);
 
