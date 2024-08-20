@@ -47,7 +47,7 @@ const Searchbar = () => {
       <div className="flex w-full lg:w-1/2 items-center gap-2 border border-[#808080] p-1 rounded-xl">
         <MdSearch size={22} className="text-[#808080]" />
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="w-full">
           <input
             type="text"
             placeholder="Search for products"
