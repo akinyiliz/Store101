@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 import { Product } from "../types/product";
 
-const ProductCard: FC<Product> = ({ id, title, price, image }) => {
+const ProductCard: FC<Product> = ({ _id, title, price, image }) => {
   return (
-    <Link to={"/products/" + id}>
+    <Link to={"/products/" + _id}>
       <div className="bg-white rounded-lg w-full hover:shadow-lg hover:scale-105 transition-transform duration-500 ease-in-out">
         <div className="relative w-full h-36 md:h-48 lg:h-64 flex items-center justify-center overflow-hidden rounded-lg">
           <img src={image} alt={title} className="w-[70%] h-full" />
@@ -15,7 +15,7 @@ const ProductCard: FC<Product> = ({ id, title, price, image }) => {
           <h2 className="text-base font-medium">
             {title.split(" ").slice(0, 4).join(" ")}
           </h2>
-          <p className="mt-1 text-sm font-light">${price}</p>
+          <p className="mt-1 text-sm font-light">Ksh. {price}</p>
         </div>
       </div>
     </Link>
