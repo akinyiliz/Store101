@@ -1,41 +1,13 @@
 import { Link } from "react-router-dom";
-
 import { MdOutlineShoppingCart } from "react-icons/md";
-
 import Searchbar from "./Searchbar";
-
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
-import Modal from "@mui/material/Modal";
-import LoginModal from "./LoginModal";
-import RegisterModal from "./RegisterModal";
 
 const Navbar = () => {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-
   const { getTotalCartItems } = useCart();
 
-  const { isAuthenticated, logout } = useAuth();
-
-  const handleOpenLoginModal = () => {
-    setIsLoginModalOpen(true);
-    setIsRegisterModalOpen(false);
-  };
-
-  const handleCloseLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
-  const handleOpenRegisterModal = () => {
-    setIsRegisterModalOpen(true);
-    setIsLoginModalOpen(false);
-  };
-
-  const handleCloseRegisterModal = () => {
-    setIsRegisterModalOpen(false);
-  };
+  const { isAuthenticated, logout, userDetails } = useAuth();
 
   function handleLogout() {
     logout();
@@ -54,8 +26,8 @@ const Navbar = () => {
           </Link>
 
           {/* CART & LOGIN BUTTON */}
-          <ul className="flex items-center gap-2 md:gap-4">
-            <li className="relative">
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="relative">
               <Link to={"/cart"}>
                 <MdOutlineShoppingCart size={30} />
                 <div className="w-[20px] h-[20px] absolute top-[-5px] left-4 text-sm rounded-full bg-primaryColor font-semibold border border-white">
@@ -64,51 +36,38 @@ const Navbar = () => {
                   </small>
                 </div>
               </Link>
-            </li>
+            </div>
 
             {isAuthenticated ? (
-              <li>
+              <div className="flex items-center gap-2">
+                {userDetails && (
+                  <h2 className="text-normal">Hello, {userDetails.username}</h2>
+                )}
                 <button
                   onClick={handleLogout}
-                  className="font-medium p-2 rounded-lg hover:bg-primaryColor hover:text-white"
+                  className="font-medium py-2 px-4 rounded-lg bg-primaryColor text-white"
                 >
                   Log out
                 </button>
-              </li>
+              </div>
             ) : (
-              <div className="flex">
-                <button
-                  onClick={handleOpenLoginModal}
+              <div className="flex gap-2">
+                <Link
+                  to={"/login"}
                   className="font-medium p-2 rounded-lg hover:text-primaryColor"
                 >
                   Login
-                </button>
+                </Link>
 
-                <button
-                  onClick={handleOpenRegisterModal}
-                  className="font-medium p-2 rounded-lg bg-primaryColor text-white"
+                <Link
+                  to={"/register"}
+                  className="font-medium p-2 py-2 px-4 rounded-lg bg-primaryColor text-white"
                 >
-                  Sign Up
-                </button>
+                  Register
+                </Link>
               </div>
             )}
-          </ul>
-
-          <Modal
-            open={isLoginModalOpen}
-            onClose={handleCloseLoginModal}
-            aria-labelledby="Login modal"
-          >
-            <LoginModal />
-          </Modal>
-
-          <Modal
-            open={isRegisterModalOpen}
-            onClose={handleCloseRegisterModal}
-            aria-labelledby="Login modal"
-          >
-            <RegisterModal />
-          </Modal>
+          </div>
         </div>
       </nav>
 
