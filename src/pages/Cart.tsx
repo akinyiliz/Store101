@@ -1,15 +1,53 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import { Modal } from "@mui/material";
+import { Link } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
+import { ImSpinner2 } from "react-icons/im";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import CheckoutModal from "../components/CheckoutModal";
 
 const Cart: FC = () => {
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
   const {
     products,
     cart,
+    addToCart,
     removeFromCart,
     getTotalCartAmount,
     getTotalCartItems,
+    clearCart,
   } = useCart();
+
+  const { isAuthenticated } = useAuth();
+
+  const handleOpenCheckoutModal = () => {
+    setCheckoutLoading(true);
+
+    setTimeout(() => {
+      setCheckoutLoading(false);
+      setIsCheckoutModalOpen(true);
+    }, 2000);
+  };
+
+  const handleCloseCheckoutModal = () => {
+    setIsCheckoutModalOpen(false);
+    clearCart();
+  };
+
+  const handleIncreaseQuantity = (productId: string) => {
+    addToCart(productId, 1);
+  };
+
+  const handleDecreaseQuantity = (productId: string) => {
+    if (cart[productId] > 1) {
+      addToCart(productId, -1);
+    } else {
+      removeFromCart(productId);
+    }
+  };
 
   return (
     <section className="p-4 pt-40 lg:pt-36 w-full xl:max-w-7xl xl:mx-auto">
@@ -24,29 +62,46 @@ const Cart: FC = () => {
           </h3>
           <hr className="h-[3px] bg-gray border-0" />
           {products.map((product) => {
-            if (cart[product.id] > 0) {
+            if (cart[product._id] > 0) {
               return (
-                <div key={product.id}>
-                  <div className="cart-item text-sm md:text-base font-normal">
+                <div key={product._id}>
+                  <div className="cart-item text-sm md:text-base font-normal flex items-center gap-2">
                     <img
                       src={product.image}
                       alt={product.title}
                       className="h-10 md:h-16"
                     />
                     <p>{product.title}</p>
-                    <p>${product.price}</p>
-                    <button className="border-2 border-gray bg-white">
-                      {cart[product.id]}
-                    </button>
-                    <p>${(product.price * cart[product.id]).toFixed(2)}</p>
+                    <p>Ksh. {product.price}</p>
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => handleDecreaseQuantity(product._id)}
+                        className="px-2 py-1 border border-gray"
+                      >
+                        -
+                      </button>
+                      <input
+                        min="1"
+                        step="1"
+                        value={cart[product._id]}
+                        readOnly
+                        className="border-2 border-gray bg-white w-6 text-center mx-1"
+                      />
+                      <button
+                        onClick={() => handleIncreaseQuantity(product._id)}
+                        className="px-2 py-1 border border-gray"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p>Ksh. {(product.price * cart[product._id]).toFixed(2)}</p>
                     <div className="flex items-center justify-center cursor-pointer">
                       <IoClose
                         size={22}
-                        onClick={() => removeFromCart(product.id)}
+                        onClick={() => removeFromCart(product._id)}
                       />
                     </div>
                   </div>
-
                   <hr />
                 </div>
               );
@@ -61,7 +116,7 @@ const Cart: FC = () => {
               <div className="text-sm md:text-base">
                 <div className="flex justify-between py-3">
                   <p>Subtotal</p>
-                  <p>${getTotalCartAmount().toFixed(2)}</p>
+                  <p>Ksh. {getTotalCartAmount().toFixed(2)}</p>
                 </div>
 
                 <hr />
@@ -75,34 +130,39 @@ const Cart: FC = () => {
 
                 <div className="text-lg flex justify-between py-3 font-semibold">
                   <h3>Total</h3>
-                  <h3>${getTotalCartAmount().toFixed(2)}</h3>
+                  <h3>Ksh. {getTotalCartAmount().toFixed(2)}</h3>
                 </div>
               </div>
 
-              {/* <button
-                disabled
-                className="py-2 md:py-4 outline-none border-none bg-primaryColor text-white text-base font-semibold cursor-pointer"
-              >
-                Proceed to Checkout
-              </button> */}
-            </div>
-
-            {/* <div className="flex-1 text-base font-medium">
-              <p className="text-secondaryColor">
-                If you have a promo code, Enter it here
-              </p>
-
-              <div className="w-full lg:w-[504px] flex justify-between mt-4">
-                <input
-                  type="text"
-                  placeholder="Promo code"
-                  className="border-none outline-none bg-[#eaeaea] text-base w-3/4 py-2 px-3"
-                />
-                <button className="w-1/4 py-2 cursor-pointer text-base bg-black text-white">
-                  Submit
+              {isAuthenticated ? (
+                <button
+                  onClick={handleOpenCheckoutModal}
+                  disabled={checkoutLoading}
+                  className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md flex items-center justify-center"
+                >
+                  {checkoutLoading ? (
+                    <ImSpinner2 className="animate-spin" size={25} />
+                  ) : (
+                    "Proceed to Checkout"
+                  )}
                 </button>
-              </div>
-            </div> */}
+              ) : (
+                <Link
+                  to={"/login"}
+                  className="w-full p-2 bg-primaryColor text-white font-semibold text-lg rounded-md flex items-center justify-center"
+                >
+                  Login
+                </Link>
+              )}
+
+              <Modal
+                open={isCheckoutModalOpen}
+                onClose={handleCloseCheckoutModal}
+                aria-labelledby="Checkout modal"
+              >
+                <CheckoutModal />
+              </Modal>
+            </div>
           </div>
         </div>
       )}
