@@ -185,7 +185,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     setToken(null);
-    localStorage.removeItem("access");
+    localStorage.removeItem("user-access");
   };
 
   const contextValue: AuthContextType = {
