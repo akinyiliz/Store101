@@ -1,14 +1,15 @@
 import ProductCard from "../components/ProductCard";
+import { useCart } from "../context/CartContext";
 import { useSearch } from "../context/SearchContext";
-import { products } from "../data/products";
 
 const SearchResultsPage = () => {
   const { searchTerm } = useSearch();
+  const { products } = useCart();
 
   const searchResults = products.filter(
     (product) =>
       product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -22,8 +23,8 @@ const SearchResultsPage = () => {
           {searchResults.map((result) => {
             return (
               <ProductCard
-                key={result.id}
-                id={result.id}
+                key={result._id}
+                _id={result._id}
                 title={result.title}
                 price={result.price}
                 image={result.image}
