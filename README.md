@@ -53,6 +53,10 @@ There are 2 other separate repositories linked to this platform:
 
 - **User Interface**: Access the user-facing frontend by navigating to `http://localhost:3000`.
 
+## To Be Done
+
+- **Payment Integration**: Implement payment gateway integration to allow users to securely process transactions during checkout.
+
 ## Contributing
 
 Feel free to open issues or submit pull requests. Contributions are welcome!
