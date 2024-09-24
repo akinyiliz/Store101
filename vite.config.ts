@@ -1,10 +1,25 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+  },
+  build: {
+    outDir: "dist",
+    rollupOptions: {
+      output: {
+        // Ensures correct file naming for ES modules
+        entryFileNames: "assets/[name].[hash].js",
+        chunkFileNames: "assets/[name].[hash].js",
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
   },
 });
